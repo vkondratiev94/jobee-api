@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+// Setup body parser
+app.use(express.json())
+
 // Setting up config.env file variables
 const dotenv = require('dotenv')
 dotenv.config({ path: './config/config.env' })
