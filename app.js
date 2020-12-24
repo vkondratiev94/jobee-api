@@ -17,6 +17,10 @@ const jobs = require('./routes/jobs')
 
 app.use('/api/v1', jobs)
 
+// Middleware to handle errors
+const errorMiddleware = require('./middlewares/errors')
+app.use(errorMiddleware)
+
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT} in ${process.env.NODE_ENV} mode`)
