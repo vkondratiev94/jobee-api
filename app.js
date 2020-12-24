@@ -24,6 +24,12 @@ const jobs = require('./routes/jobs')
 
 app.use('/api/v1', jobs)
 
+// Handle unhandled errors
+const ErrorHandler = require('./utils/errorHandler')
+app.all('*', (req, res, next) => {
+  next(new ErrorHandler(`${req.originalUrl} route not found`, 404))
+})
+
 // Middleware to handle errors
 const errorMiddleware = require('./middlewares/errors')
 app.use(errorMiddleware)
