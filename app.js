@@ -8,6 +8,13 @@ app.use(express.json())
 const dotenv = require('dotenv')
 dotenv.config({ path: './config/config.env' })
 
+// Handling uncaught exception
+process.on('uncaughtException', err => {
+  console.log(`Error: ${err.message}`)
+  console.log(`Shutting down the server due to uncaught exception`)
+  process.exit(1)
+})
+
 // Connecting to database
 const connectDatabase = require('./config/db')
 connectDatabase()
