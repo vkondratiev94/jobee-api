@@ -8,7 +8,7 @@ class APIFilters {
     const queryStringCopy = {...this.queryString}
 
     // Removing non-filter fields from the query
-    const removeFields = ['sort']
+    const removeFields = ['sort', 'fields']
     removeFields.forEach(el => delete queryStringCopy[el])
 
     // Advanced filter using: lt, lte, gt, gte
@@ -26,6 +26,18 @@ class APIFilters {
     } else {
       // default sorting
       this.query = this.query.sort('-postingDate')
+    }
+
+    return this
+  }
+
+  selectFields() {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ')
+      this.query = this.query.select(fields)
+    } else {
+      // by default without `__v` field
+      this.query = this.query.select('-__v')
     }
 
     return this
