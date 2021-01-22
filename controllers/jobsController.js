@@ -10,7 +10,8 @@ exports.getJobs = catchAsyncErrors(async (req, res, next) => {
     .filter()
     .sort()
     .selectFields()
-    .searchByQuery() // returns object with query and queryString props
+    .searchByQuery()
+    .pagination() // returns object with query and queryString props
   const jobs = await apiFilters.query
 
   res.status(200).json({
