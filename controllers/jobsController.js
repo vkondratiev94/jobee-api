@@ -2,10 +2,13 @@ const geoCoder = require('../utils/geocoder')
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
 const Job = require('../models/jobs')
+const APIFilters = require('../utils/apiFilters')
 
 // Get all jobs => /api/v1/jobs
 exports.getJobs = catchAsyncErrors(async (req, res, next) => {
-  const jobs = await Job.find()
+  const apiFilters = new APIFilters(Job.find(), req.query)
+    .filter()
+  const jobs = await apiFilters.query
 
   res.status(200).json({
     success: true,
@@ -51,10 +54,7 @@ exports.deleteJob = catchAsyncErrors(async (req, res, next) => {
   const job = await Job.findById(req.params.id)
 
   if (!job) {
-    return res.status(404).json({
-      success: false,
-      message: 'Job not found'
-    })
+    return next(new ErrorHandler('Job not found', 404))
   }
 
   await Job.findByIdAndDelete(req.params.id)
@@ -73,10 +73,7 @@ exports.getJob = catchAsyncErrors(async (req, res, next) => {
   ]})
 
   if (!job || !job.length) {
-    return res.status(404).json({
-      success: false,
-      message: 'Job not found'
-    })
+    return next(new ErrorHandler('Job not found', 404))
   }
 
   res.status(200).json({
@@ -134,10 +131,7 @@ exports.jobStats = catchAsyncErrors(async (req, res, next) => {
   ])
 
   if (stats.length === 0) {
-    return res.status(404).json({
-      success: false,
-      message: `No stats found for - ${req.params.topic}`,
-    })
+    return next(new ErrorHandler(`No stats found for - ${req.params.topic}`, 200))
   }
 
   res.status(200).json({
