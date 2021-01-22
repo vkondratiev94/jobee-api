@@ -8,6 +8,7 @@ const APIFilters = require('../utils/apiFilters')
 exports.getJobs = catchAsyncErrors(async (req, res, next) => {
   const apiFilters = new APIFilters(Job.find(), req.query)
     .filter()
+    .sort() // returns object with query and queryString props
   const jobs = await apiFilters.query
 
   res.status(200).json({
